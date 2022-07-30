@@ -1,24 +1,30 @@
 package com.example.whatsapp.data
 
+import androidx.compose.ui.graphics.Color
 import com.example.whatsapp.R
+import com.example.whatsapp.ui.theme.LightGreen
 
 data class FakeChat(
     val name: String,
     val time: String,
     val message: String,
-    val image : Int,
-    val id: Int
+    val image: Int,
 )
 
 data class FakeStatus(
-    val status: String
+    val name: String,
+    val info: String,
+    val image: Int,
+    val color: Color
 )
 
-data class FakeCalls(
-    val callerName: String,
+data class FakeCall(
+    val name: String,
     val time: String,
-    val videoCall: Boolean,
-    val missed: Boolean
+    val image: Int,
+    val isVideoCall: Boolean,
+    val isMissed: Boolean,
+    val isCaller: Boolean
 )
 
 object FakeChatData{
@@ -28,21 +34,135 @@ object FakeChatData{
             "17:45",
             "sara: hello",
             R.drawable.code,
-            0
         ),
         FakeChat(
             "Family",
             "15:40",
             "Mom: good",
             R.drawable.flower,
-            1
         ),
         FakeChat(
             "Yasaman",
             "9:20",
             "Where are you? we should be there in...",
             R.drawable.girl,
-            2
+        ),
+        FakeChat(
+            "Negar",
+            "9:00",
+            "GoodBye, see you later",
+            R.drawable.nature,
         )
     )
+}
+
+
+object FakeStatusData{
+    val list = listOf(
+        FakeStatus(
+            "My Status",
+            "tap to add status update",
+            R.drawable.status,
+            Color.LightGray
+        ),
+        FakeStatus(
+            "Yasaman",
+            "3 minutes ago, 18:30 p.m.",
+            R.drawable.girl,
+            Color.LightGray
+        ),
+        FakeStatus(
+            "Sara",
+            "1 hour ago, 17:33 p.m.",
+            R.drawable.cat,
+            LightGreen
+        )
+    )
+}
+
+object FakeCallData{
+    val list = listOf(
+        FakeCall(
+            "Yasaman",
+            "28 July, 21:49",
+            R.drawable.girl,
+            false,
+            false,
+            false
+        ),
+        FakeCall(
+            "Sara",
+            "18 July, 16:30",
+            R.drawable.cat,
+            true,
+            false,
+            true
+        ),
+        FakeCall(
+            "Sara",
+            "18 July, 16:25",
+            R.drawable.cat,
+            true,
+            true,
+            true
+        ),
+        FakeCall(
+            "Negar",
+            "29 June, 11:00",
+            R.drawable.nature,
+            false,
+            true,
+            false
+        ),
+        FakeCall(
+            "Negar",
+            "29 June, 10:50",
+            R.drawable.nature,
+            false,
+            true,
+            true
+        ),
+        FakeCall(
+            "Negar",
+            "29 June, 10:40",
+            R.drawable.nature,
+            true,
+            true,
+            false
+        ),
+        FakeCall(
+            "Yasaman",
+            "28 June, 21:49",
+            R.drawable.girl,
+            false,
+            false,
+            false
+        ),
+        FakeCall(
+            "Yasaman",
+            "28 June, 20:09",
+            R.drawable.girl,
+            true,
+            false,
+            false
+        ),
+        FakeCall(
+            "Negar",
+            "22 June, 10:00",
+            R.drawable.nature,
+            false,
+            false,
+            false
+        ),
+        FakeCall(
+            "Negar",
+            "22 June, 9:00",
+            R.drawable.nature,
+            false,
+            true,
+            true
+        ),
+
+    )
+
 }

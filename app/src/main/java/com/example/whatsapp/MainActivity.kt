@@ -1,5 +1,6 @@
 package com.example.whatsapp
 
+import android.graphics.Paint.Align
 import android.media.Image
 import android.os.Build
 import android.os.Bundle
@@ -7,11 +8,11 @@ import android.provider.ContactsContract.CommonDataKinds.Im
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -21,19 +22,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
-import com.example.whatsapp.data.FakeChatData
-import com.example.whatsapp.ui.theme.LightGreen
-import com.example.whatsapp.ui.theme.TealDarkGreen
-import com.example.whatsapp.ui.theme.WhatsAppTheme
+import com.example.whatsapp.data.*
+import com.example.whatsapp.ui.theme.*
 import com.google.accompanist.pager.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
+import java.util.Objects
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -42,6 +44,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             WhatsAppTheme {
 
+                val systemUiController = rememberSystemUiController()
+                SideEffect {
+                    systemUiController.setStatusBarColor(
+                        color = TealDarkGreen,
+                        darkIcons = false
+                    )
+                }
+
                 HomePage()
 
             }
@@ -49,30 +59,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun HomePage(){
 
-    val systemUiController = rememberSystemUiController()
-    SideEffect {
-        systemUiController.setStatusBarColor(
-            color = TealDarkGreen,
-            darkIcons = false
-        )
-    }
-
-    HomeAppBar()
-
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-private fun HomeAppBar() {
-
     Column(
         modifier = Modifier
-        .fillMaxWidth()
+            .fillMaxWidth()
     ) {
         TopAppBar(
             title = {
@@ -106,6 +100,7 @@ private fun HomeAppBar() {
 
         TabsLayout()
     }
+
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -189,22 +184,52 @@ fun Tabs(pagerState: PagerState) {
 @ExperimentalPagerApi
 @Composable
 fun TabsContent(pagerState: PagerState) {
+    /**
+     *  make it scrollable
+     */
 
     HorizontalPager(state = pagerState) {
         page ->
         when (page) {
             0 -> {
-                //Camera page
+                /**
+                 *  add color change
+                 */
+
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)){
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 20.dp)
+                    ) {
+                        OutlinedButton(
+                            onClick = { /*TODO*/ },
+                            modifier= Modifier.size(80.dp),
+                            shape = CircleShape,
+                            border= BorderStroke(8.dp, Color.Gray),
+                            contentPadding = PaddingValues(0.dp),
+                            colors = ButtonDefaults.textButtonColors(
+                                backgroundColor = Color.Black
+                            )
+                        ) {
+                            Icon(Icons.Default.Add, contentDescription = null, tint = Color.Black)
+                        }
+                    }
+                }
+
             }
 
             1 -> {
+                val chats = FakeChatData.list
                 Box(modifier = Modifier.fillMaxSize()) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
-                        for (i in 0..2) {
-                            chatInfo(i = i)
+                        for (i in 0..chats.size-1) {
+                            chatInfo(i = i, chats)
                             Divider(
                                 color = Color(0xFFebebeb),
                                 modifier = Modifier.padding(start = 70.dp, end = 22.dp)
@@ -212,8 +237,7 @@ fun TabsContent(pagerState: PagerState) {
                         }
                     }
                     FloatingActionButton(
-                        onClick = {
-                        },
+                        onClick = {},
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .padding(24.dp),
@@ -231,9 +255,10 @@ fun TabsContent(pagerState: PagerState) {
 
             2 -> {
 
-                //status page
-
                 Box(modifier = Modifier.fillMaxSize()){
+
+                    statusInfo()
+
                     FloatingActionButton(
                         onClick = {
                         },
@@ -252,10 +277,21 @@ fun TabsContent(pagerState: PagerState) {
             }
 
             3 ->{
-
-                //calls page
-
-                Box(modifier = Modifier.fillMaxSize()){
+                val calls = FakeCallData.list
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        for (i in 0..calls.size-1) {
+                            callsInfo(i = i, calls)
+                            Divider(
+                                color = Color(0xFFebebeb),
+                                modifier = Modifier.padding(start = 70.dp, end = 22.dp)
+                            )
+                        }
+                    }
                     FloatingActionButton(
                         onClick = {
                         },
@@ -277,8 +313,7 @@ fun TabsContent(pagerState: PagerState) {
 }
 
 @Composable
-fun chatInfo(i : Int) {
-    val chats = FakeChatData.list
+fun chatInfo(i : Int, chats : List<FakeChat>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -313,6 +348,241 @@ fun chatInfo(i : Int) {
                     text = chats[i].message,
                     modifier = Modifier.align(Alignment.BottomStart),
                     color = Color.Gray)
+            }
+        }
+    }
+}
+
+@Composable
+fun statusInfo(){
+
+    /**
+     *    use for loop and if
+     *    for multiple users
+     */
+
+    Column(modifier= Modifier.fillMaxSize()) {
+        val status = FakeStatusData.list
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(75.dp)
+                .clickable { }
+                .padding(10.dp)
+       ){
+            Row(modifier = Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(id = status[0].image),
+                    "picture",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(65.dp)
+                        .clip(CircleShape)
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 10.dp, top = 5.dp, bottom = 5.dp, end = 10.dp)
+                ) {
+                    Text(
+                        text = status[0].name,
+                        modifier = Modifier.align(Alignment.TopStart)
+                    )
+                    Text(
+                        text = status[0].info,
+                        modifier = Modifier.align(Alignment.BottomStart),
+                        color = Color.Gray
+                    )
+                }
+            }
+        }
+
+        /**
+         *    Check if it has recent or viewed updates
+         */
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = WhiteChocolate)
+                .height(30.dp)
+                .padding(start = 10.dp)
+        ) {
+            Text(
+                text = "Recent updates",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                color = TealDarkGreen,
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(75.dp)
+                .clickable { }
+                .padding(start = 7.dp)
+                .padding(10.dp)
+        ){
+            Row(modifier = Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(id = status[1].image),
+                    "picture",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, LightGreen, CircleShape)
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 13.dp, top = 5.dp, bottom = 5.dp, end = 10.dp)
+                ) {
+                    Text(
+                        text = status[1].name,
+                        modifier = Modifier.align(Alignment.TopStart)
+                    )
+                    Text(
+                        text = status[1].info,
+                        modifier = Modifier.align(Alignment.BottomStart),
+                        color = Color.Gray
+                    )
+                }
+            }
+        }
+
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = WhiteChocolate)
+                .height(30.dp)
+                .padding(start = 10.dp)
+        ) {
+            Text(
+                text = "Viewed updates",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                color = TealDarkGreen,
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
+        }
+
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(75.dp)
+                .clickable { }
+                .padding(start = 7.dp)
+                .padding(10.dp)
+        ){
+            Row(modifier = Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(id = status[2].image),
+                    "picture",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.LightGray, CircleShape)
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 13.dp, top = 5.dp, bottom = 5.dp, end = 10.dp)
+                ) {
+                    Text(
+                        text = status[2].name,
+                        modifier = Modifier.align(Alignment.TopStart)
+                    )
+                    Text(
+                        text = status[2].info,
+                        modifier = Modifier.align(Alignment.BottomStart),
+                        color = Color.Gray
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun callsInfo(i : Int, calls : List<FakeCall>){
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { }
+            .height(75.dp)
+            .padding(10.dp)
+    ) {
+        Row(modifier = Modifier.fillMaxSize()) {
+            Image(
+                painter = painterResource(id = calls[i].image),
+                "picture",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(54.dp)
+                    .clip(CircleShape)
+            )
+            Box(
+                modifier = Modifier
+                    .width(280.dp)
+                    .padding(start = 13.dp, top = 4.dp, bottom = 4.dp, end = 10.dp)
+            ) {
+
+                Column(modifier = Modifier.fillMaxSize()) {
+
+                    var rotationDeg: Float = 0f
+                    var isMissed: Color = LightGreen
+                    Text( text = calls[i].name)
+
+                    Row(modifier = Modifier.fillMaxWidth()){
+
+                        if(calls[i].isCaller == false)
+                            rotationDeg = 180f
+
+                        if(calls[i].isMissed)
+                            isMissed = Color.Red
+                        Box(modifier = Modifier.align(Alignment.CenterVertically)) {
+                            Icon(
+                                painterResource(id = R.drawable.baseline_north_east_24),
+                                tint = isMissed,
+                                contentDescription = "call",
+                                modifier = Modifier
+                                    .rotate(rotationDeg)
+                                    .size(15.dp),
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.size(3.dp))
+
+                        Text(
+                                text = calls[i].time,
+                                color = Color.Gray
+                            )
+                    }
+                }
+
+            }
+            Box(modifier = Modifier.align(Alignment.CenterVertically)){
+                if ( calls[i].isVideoCall )
+                    Icon(
+                        painterResource(id = R.drawable.baseline_videocam_24),
+                        tint = semiLightGreen,
+                        contentDescription = "call"
+                    )
+                else{
+                    Icon(
+                        imageVector = Icons.Filled.Call,
+                        tint = semiLightGreen,
+                        contentDescription = "call",
+                    )
+                }
             }
         }
     }
