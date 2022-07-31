@@ -115,35 +115,8 @@ fun TabsContent(pagerState: PagerState) {
     HorizontalPager(state = pagerState) {
             page ->
         when (page) {
-            0 -> {
-                /**
-                 *  add color change
-                 */
 
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black)){
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 20.dp)
-                    ) {
-                        OutlinedButton(
-                            onClick = { /*TODO*/ },
-                            modifier= Modifier.size(80.dp),
-                            shape = CircleShape,
-                            border= BorderStroke(8.dp, Color.Gray),
-                            contentPadding = PaddingValues(0.dp),
-                            colors = ButtonDefaults.textButtonColors(
-                                backgroundColor = Color.Black
-                            )
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = null, tint = Color.Black)
-                        }
-                    }
-                }
-
-            }
+            0 -> { cameraUI() }
 
             1 -> {
                 val chats = FakeChatData.list
