@@ -15,7 +15,7 @@ data class FakeStatus(
     val name: String,
     val info: String,
     val image: Int,
-    val color: Color
+    val isRecent: Boolean
 )
 
 data class FakeCall(
@@ -63,20 +63,26 @@ object FakeStatusData{
             "My Status",
             "tap to add status update",
             R.drawable.status,
-            Color.LightGray
+            false
         ),
         FakeStatus(
             "Yasaman",
             "3 minutes ago, 18:30 p.m.",
             R.drawable.girl,
-            Color.LightGray
+            true
         ),
         FakeStatus(
             "Sara",
             "1 hour ago, 17:33 p.m.",
             R.drawable.cat,
-            LightGreen
-        )
+            false
+        ),
+        FakeStatus(
+            "Negar",
+            "10 hours ago, 10:38 a.m.",
+            R.drawable.nature,
+            false
+        ),
     )
 }
 
