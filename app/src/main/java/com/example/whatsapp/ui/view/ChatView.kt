@@ -14,11 +14,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.whatsapp.data.FakeChat
-import com.example.whatsapp.R
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.VerticalPager
-import com.google.accompanist.pager.rememberPagerState
-
 
 
 @Composable
@@ -60,26 +55,4 @@ fun chatInfo(i : Int, chats : List<FakeChat>) {
             }
         }
     }
-}
-
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun chatRoom(){
-    val pagerState = rememberPagerState(1)
-    VerticalPager(state = pagerState) {
-            page ->
-        when (page) {
-            0 -> {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Image(
-                        painter = painterResource(id = R.drawable.background),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            }
-        }
-    }
-
-
 }
