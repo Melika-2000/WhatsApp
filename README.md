@@ -12,6 +12,6 @@ This repository contains a UI implementation of the popular messaging app, Whats
 After running the project, you will see the main screen of the app. You can navigate through the different sections of the app and interact with the UI elements.
 <br>
 <br>
-<p align="center">
+<p align="left">
 <img src="https://github.com/Melika-2000/WhatsApp/assets/68336285/adc23010-efc1-4af1-9299-ded512a19f71" width="642" height="462">
 </p>
