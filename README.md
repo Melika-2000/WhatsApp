@@ -3,7 +3,7 @@ This repository contains a UI implementation of the popular messaging app, Whats
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/Melika-2000/WhatsApp.git`
+1. Clone the repository: `git clone https://github.com/Melika-Zabihi/WhatsApp.git`
 2. Open the project in Android Studio.
 3. Run the project on an emulator or a physical device.
    
